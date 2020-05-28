@@ -4,9 +4,11 @@ import * as morgan from 'morgan';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import { Config } from './config/config';
+import { Passport } from './lib/passport';
 
 // Routes
 import { IndexRoute } from './routes/index';
+import { AuthRoute } from './routes/auth';
 
 
 
@@ -14,7 +16,10 @@ class App {
 
     public app: express.Application;
     private configuration: Config = new Config();
+    private passport: Passport = new Passport(); // Initialize passport (LocalStrategy & JWTStrategy)
+
     public indexRoute: IndexRoute = new IndexRoute();
+    public authRoute: AuthRoute = new AuthRoute();
 
     constructor() {
         this.app = express();
@@ -57,7 +62,7 @@ class App {
 
     private routes(): void {
         this.indexRoute.routes(this.app);
-
+        this.authRoute.routes(this.app);
     }
 }
 

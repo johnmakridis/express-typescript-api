@@ -6,7 +6,10 @@ export class Config {
 
     constructor() {
         this.server = {
-            port: process.env.PORT || 3000
+            port: process.env.PORT || 3000,
+            jwt: {
+                secret: process.env.JWT_SECRET || 'test'
+            }
         };
     }
 }

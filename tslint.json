@@ -30,7 +30,6 @@
         "no-trailing-whitespace": true,
         "no-unused-expression": true,
         "no-unused-variable": false,
-        "no-use-before-declare": true,
         "no-var-requires": false,
         "one-line": [
             true,
@@ -78,9 +77,6 @@
             true,
             "check-space"
         ],
-        "deprecation": {
-            "severity": "warn"
-        },
         "import-spacing": true,
         "interface-over-type-literal": true,
         "member-access": false,
