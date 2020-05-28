@@ -25,7 +25,7 @@ export class AuthRoute {
                         if (err)
                             return res.send(err);
 
-                        const token = jwt.sign(user, this.config.server.jwt.secret, { expiresIn: '30 days' });
+                        const token = jwt.sign(user, this.config.server.jwt.secret, { expiresIn: this.config.server.jwt.duration });
 
                         return res.json({ user, token });
                     });

@@ -46,20 +46,12 @@ export class Passport {
             secretOrKey: this.config.server.jwt.secret
         }, (jwtPayload: any, callback: Function) => {
             try {
+                // Here: DB Query to check if user exists and he is activated (not banned)
+
                 return callback(null, jwtPayload);
             } catch (error) {
                 return callback(error);
             }
-
-
-            // //find the user in db if needed
-            // return UserModel.findOneById(jwtPayload.id)
-            //     .then(user => {
-            //         return cb(null, user);
-            //     })
-            //     .catch(err => {
-            //         return cb(err);
-            //     });
         }
         ));
 
