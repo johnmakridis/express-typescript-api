@@ -1,36 +1,38 @@
 import { Request, Response, Application } from 'express';
+import { config } from '../config/config';
+import { utils } from '../lib/utils';
+import { customAlphabet } from 'nanoid';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';
-import * as moment from 'moment';
-import { Config } from '../config/config';
 
 
 export class AuthRoute {
-    private config: Config = new Config();
 
     public routes(app: Application): void {
 
-        app.route('/auth/login')
+        app.route('/api/auth/login')
             .post((req: Request, res: Response) => {
 
                 passport.authenticate('local', { session: false }, (error, user, info) => {
 
                     if (error || !user)
-                        return res.status(400).json({
-                            message: info ? info.message : 'Login failed',
-                            user: user
-                        });
+                        return res.status(400).json({ code: 400, error: 'bad_request', message: info ? info.message : 'Login failed' });
 
                     req.login(user, { session: false }, (err) => {
+
                         if (err)
                             return res.send(err);
 
-                        const token = jwt.sign(user, this.config.server.jwt.secret, { expiresIn: this.config.server.jwt.duration });
+                        // ...user,
+                        const token = jwt.sign({ uid: utils.generateNanoID() }, config.server.jwt.secret, { expiresIn: config.server.jwt.duration });
 
                         return res.json({ user, token });
                     });
+
                 })(req, res);
 
             });
+
     }
+
 }
