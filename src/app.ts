@@ -1,6 +1,6 @@
 import { config } from './config/config';
 import { Passport } from './lib/passport';
-import { RateLimiterMiddleware } from './lib/rate-limiter';
+import { MySQLRateLimiterMiddleware } from './lib/rate-limiter';
 import { utils } from './lib/utils';
 import * as express from 'express';
 import * as morgan from 'morgan';
@@ -34,21 +34,23 @@ class App {
         this.app.use(express.json()); // support application/json type post data
         this.app.use(express.urlencoded({ extended: false })); // support application/x-www-form-urlencoded post data
         this.app.use(morgan('dev'));
-        this.app.use(cors());
-        this.app.use(helmet());
+        this.app.use(cors({
+            credentials: true,
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        }));
+        this.app.disable('x-powered-by');
+        this.app.use(helmet({ frameguard: { action: 'sameorigin' }, hidePoweredBy: true, xssFilter: true, noSniff: true, ieNoOpen: true }));
         this.app.use(this.passport.passport.initialize());
+
 
         this.app.use('/api', utils.checkToken);
 
-        if (config.server.rate_limit.enabled)
-            this.app.use('/api', new RateLimiterMiddleware((error) => { if (error) console.log(error); }).middleware);
+        if (config.server.rate_limit.enabled && config.server.rate_limit.store === 'mysql')
+            this.app.use('/api', new MySQLRateLimiterMiddleware((error) => { if (error) console.log(error); }).middleware);
 
 
         this.app.use((req: express.Request, res: express.Response, next: any) => {
-            res.setHeader('Access-Control-Allow-Origin', '*'); // Website you wish to allow to connect
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Request methods you wish to allow
-            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Authorization, Content-Type'); // Request headers you wish to allow
-            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Authorization, Content-Type, X-Content-Type-Options'); // Request headers you wish to allow
 
             next();
         });

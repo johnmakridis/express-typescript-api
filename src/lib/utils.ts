@@ -12,6 +12,9 @@ export class Utils {
 
     checkToken = (req: Request, res: Response, next: NextFunction) => {
 
+        if (config.server.jwt.excluded_api_paths.includes(req.path))
+            return next();
+
         // tslint:disable-next-line:no-string-literal
         let apiKey: any = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
 
@@ -28,6 +31,8 @@ export class Utils {
 
                 if (apiKeyExpired)
                     return res.status(401).send({ code: 401, error: 'unauthorized', message: 'Your token has expired.' });
+
+                // res.set({ 'X-Token-Expires': moment(decoded.exp * 1000).toDate() });
 
                 req.uid = decoded.uid;
 

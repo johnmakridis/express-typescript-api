@@ -9,7 +9,7 @@ export class AuthRoutes {
 
     public routes(app: Application): void {
 
-        app.route('/auth/login')
+        app.route('/api/auth/login')
             .post((req: Request, res: Response) => {
 
                 passport.authenticate('local', { session: false }, (error, user, info) => {

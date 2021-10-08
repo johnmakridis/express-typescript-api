@@ -4,7 +4,7 @@ import { config, dbConfig } from '../config/config';
 import { mysql } from '../lib/connectors/mysql';
 
 
-class RateLimiterMiddleware extends RateLimiterMySQL {
+export class MySQLRateLimiterMiddleware extends RateLimiterMySQL {
 
     constructor(ready: ICallbackReady) {
         super(
@@ -12,8 +12,8 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
                 dbName: dbConfig.mysql.database,
                 storeClient: mysql.pool,
                 storeType: 'mysql',
-                tableName: 'api_limits',
-                keyPrefix: 'tid', // token uid generated with nanoid
+                tableName: config.server.rate_limit.mysql_table,
+                keyPrefix: config.server.rate_limit.key_prefix, // token uid generated with nanoid
                 points: 10, // Max requests per "duration" below
                 duration: 1, // seconds
                 blockDuration: 5 // block requests from specific client for N seconds
@@ -23,6 +23,9 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
     }
     middleware: Handler = async (req: Request, res: any, next: NextFunction) => {
         try {
+
+            if (config.server.rate_limit.excluded_limiter_paths.includes(req.path))
+                return next();
 
             const rateLimiterRes = await this.consume(req.uid, 1);
 
@@ -44,4 +47,4 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
 
 }
 
-export { RateLimiterMiddleware };
+

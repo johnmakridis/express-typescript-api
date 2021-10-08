@@ -11,11 +11,19 @@ class Config {
             port: process.env.PORT || 3000,
             jwt: {
                 secret: process.env.JWT_SECRET || 'test',
-                duration: process.env.JWT_DURATION || '1 days'
+                duration: process.env.JWT_DURATION || '30 days',
+                excluded_api_paths: [
+                    '/auth/login'
+                ]
             },
             rate_limit: {
                 enabled: process.env.RATE_LIMITER_USE === 'true' ? true : false,
-                store: process.env.RATE_LIMITER_STORE
+                store: process.env.RATE_LIMITER_STORE,
+                mysql_table: process.env.RATE_LIMITER_STORE_MYSQL_TABLE || 'api_rate_limits',
+                key_prefix: process.env.RATE_LIMITER_STORE_KEY_PREFIX || 'tid',
+                excluded_limiter_paths: [
+                    '/auth/login'
+                ]
             }
         };
 
