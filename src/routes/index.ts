@@ -1,7 +1,8 @@
 import { Request, Response, Application } from 'express';
-import * as passport from 'passport';
+// import * as passport from 'passport';
 
-export class IndexRoute {
+export class IndexRoutes {
+
     public routes(app: Application): void {
 
         app.route('/')
@@ -9,14 +10,12 @@ export class IndexRoute {
                 res.status(403).send({ code: 403, message: 'Access Denied' });
             });
 
-        app.route('/protected')
-            .get(passport.authenticate('jwt', { session: false }), (req: Request, res: Response) => {
-                return res.status(200).send({ msg: 'you entered the protected zone' });
-            });
 
-        app.route('/api/v2/test')
-            .get((req: Request, res: Response) => {
-                return res.status(200).send({ msg: 'Hello from API v2 test' });
-            });
+
+        // app.route('/protected') // NOTE: not used -> replaced with utils.checkToken()
+        //     .get(passport.authenticate('jwt', { session: false }), (req: Request, res: Response) => {
+        //         return res.status(200).send({ msg: 'you entered the protected zone' });
+        //     });
+
     }
 }

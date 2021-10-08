@@ -1,16 +1,15 @@
 import { Request, Response, Application } from 'express';
 import { config } from '../config/config';
 import { utils } from '../lib/utils';
-import { customAlphabet } from 'nanoid';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';
 
 
-export class AuthRoute {
+export class AuthRoutes {
 
     public routes(app: Application): void {
 
-        app.route('/api/auth/login')
+        app.route('/auth/login')
             .post((req: Request, res: Response) => {
 
                 passport.authenticate('local', { session: false }, (error, user, info) => {

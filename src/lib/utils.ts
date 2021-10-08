@@ -10,7 +10,7 @@ export class Utils {
 
     public moment = moment;
 
-    checkApiToken = (req: Request, res: Response, next: NextFunction) => {
+    checkToken = (req: Request, res: Response, next: NextFunction) => {
 
         // tslint:disable-next-line:no-string-literal
         let apiKey: any = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase

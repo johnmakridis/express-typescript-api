@@ -8,8 +8,9 @@ import * as cors from 'cors';
 import * as helmet from 'helmet';
 
 // Routes
-import { IndexRoute } from './routes/index';
-import { AuthRoute } from './routes/auth';
+import { IndexRoutes } from './routes/index';
+import { AuthRoutes } from './routes/auth';
+import { ApiRoutes } from './routes/api';
 
 
 class App {
@@ -17,8 +18,9 @@ class App {
     public app: express.Application;
     private passport = new Passport(); // Initialize passport (LocalStrategy & JWTStrategy)
 
-    public indexRoute = new IndexRoute();
-    public authRoute = new AuthRoute();
+    public indexRoutes = new IndexRoutes();
+    public authRoutes = new AuthRoutes();
+    public apiRoutes = new ApiRoutes();
 
     constructor() {
         this.app = express();
@@ -36,10 +38,10 @@ class App {
         this.app.use(helmet());
         this.app.use(this.passport.passport.initialize());
 
-        this.app.use('/api/v2', utils.checkApiToken);
+        this.app.use('/api', utils.checkToken);
 
         if (config.server.rate_limit.enabled)
-            this.app.use('/api/v2', new RateLimiterMiddleware((error) => { if (error) console.log(error); }).middleware);
+            this.app.use('/api', new RateLimiterMiddleware((error) => { if (error) console.log(error); }).middleware);
 
 
         this.app.use((req: express.Request, res: express.Response, next: any) => {
@@ -68,8 +70,9 @@ class App {
     }
 
     private routes(): void {
-        this.indexRoute.routes(this.app);
-        this.authRoute.routes(this.app);
+        this.indexRoutes.routes(this.app);
+        this.authRoutes.routes(this.app);
+        this.apiRoutes.routes(this.app);
     }
 }
 

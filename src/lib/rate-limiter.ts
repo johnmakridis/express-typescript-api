@@ -9,7 +9,7 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
     constructor(ready: ICallbackReady) {
         super(
             {
-                dbName: mysql.poolConfig.database,
+                dbName: dbConfig.mysql.database,
                 storeClient: mysql.pool,
                 storeType: 'mysql',
                 tableName: 'api_limits',
