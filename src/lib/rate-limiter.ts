@@ -14,8 +14,8 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
                 storeType: 'mysql',
                 tableName: 'api_limits',
                 keyPrefix: 'tid', // token uid generated with nanoid
-                points: 1, // Max requests
-                duration: 1, // per N seconds
+                points: 10, // Max requests per "duration" below
+                duration: 1, // seconds
                 blockDuration: 5 // block requests from specific client for N seconds
             },
             ready,
