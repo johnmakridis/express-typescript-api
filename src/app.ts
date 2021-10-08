@@ -1,4 +1,4 @@
-import { config } from './config/config';
+import { config } from './config';
 import { Passport } from './lib/passport';
 import { MySQLRateLimiterMiddleware } from './lib/rate-limiter';
 import { utils } from './lib/utils';

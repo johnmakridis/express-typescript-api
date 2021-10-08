@@ -1,5 +1,5 @@
 import { Request, Response, Application } from 'express';
-import { config } from '../config/config';
+import { config } from '../config';
 import { utils } from '../lib/utils';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';

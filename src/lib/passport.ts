@@ -1,7 +1,7 @@
 import * as passport from 'passport';
 import * as passportJWT from 'passport-jwt';
 import * as passportLocal from 'passport-local';
-import { config } from '../config/config';
+import { config } from '../config';
 
 export class Passport {
 

@@ -1,6 +1,6 @@
 import { ICallbackReady, RateLimiterMySQL } from 'rate-limiter-flexible';
 import { Handler, NextFunction, Request, Response } from 'express';
-import { config, dbConfig } from '../config/config';
+import { config, dbConfig } from '../config';
 import { mysql } from '../lib/connectors/mysql';
 
 
