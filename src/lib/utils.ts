@@ -29,8 +29,6 @@ export class Utils {
                 if (apiKeyExpired)
                     return res.status(401).send({ code: 401, error: 'unauthorized', message: 'Your token has expired.' });
 
-                console.log(decoded);
-
                 req.uid = decoded.uid;
 
                 return next();
