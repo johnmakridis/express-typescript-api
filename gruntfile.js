@@ -4,31 +4,24 @@ module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
             app: {
-                files: [{
-                    src: ["src/**/*.ts", "!src/.baseDir.ts", "!src/_all.d.ts"],
-                    dest: "dist"
-                }],
-                options: {
-                    module: "commonjs",
-                    noLib: false,
-                    target: "es6",
-                    sourceMap: false,
-                    rootDir: "./src"
-                }
+                tsconfig: true, // grab grunt configuration from tsconfig.json
             }
         },
         tslint: {
             options: {
-                configuration: "tslint.json"
+                configuration: 'tslint.json'
             },
-            files: {
-                src: ["src/**/*.ts"]
+            app: {
+                src: ['src/**/*.ts']
             }
         },
         watch: {
             ts: {
-                files: ["js/src/**/*.ts", "src/**/*.ts"],
-                tasks: ["ts", "tslint"]
+                files: ['src/**/*.ts'],
+                tasks: ['newer:tslint:app', 'ts:app'],
+                options: {
+                    spawn: false
+                }
             }
         },
         copy: {
@@ -49,10 +42,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks("grunt-tslint");
+    grunt.loadNpmTasks('grunt-newer');
+
 
     grunt.registerTask("default", [
-        "ts",
-        "tslint",
+        "tslint:app",
+        "ts:app",
         "copy"
     ]);
 
