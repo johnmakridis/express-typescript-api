@@ -1,10 +1,11 @@
 import * as passport from 'passport';
 import * as passportJWT from 'passport-jwt';
 import * as passportLocal from 'passport-local';
-import { Config } from '../config/config';
+import { config } from '../config/config';
 
 export class Passport {
-    private config: Config = new Config();
+
+    public passport = passport;
 
     constructor() {
         // Local Strategy (login)
@@ -26,7 +27,7 @@ export class Passport {
 
                 // User not exist
                 if (!user)
-                    return callback(null, false, { message: 'Incorrect email or password.' });
+                    return callback(null, null, { message: 'Incorrect email or password.' });
 
 
                 // User exist
@@ -43,12 +44,14 @@ export class Passport {
         // JsonWebToken Strategy
         passport.use(new passportJWT.Strategy({
             jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: this.config.server.jwt.secret
+            secretOrKey: config.server.jwt.secret
         }, (jwtPayload: any, callback: Function) => {
             try {
+
                 // Here: DB Query to check if user exists and he is activated (not banned)
 
                 return callback(null, jwtPayload);
+
             } catch (error) {
                 return callback(error);
             }

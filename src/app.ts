@@ -1,39 +1,46 @@
+import { config } from './config/config';
+import { Passport } from './lib/passport';
+import { RateLimiterMiddleware } from './lib/rate-limiter';
+import { utils } from './lib/utils';
 import * as express from 'express';
-import * as bodyParser from 'body-parser';
 import * as morgan from 'morgan';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
-import { Config } from './config/config';
-import { Passport } from './lib/passport';
 
 // Routes
 import { IndexRoute } from './routes/index';
 import { AuthRoute } from './routes/auth';
 
 
-
 class App {
 
     public app: express.Application;
-    private configuration: Config = new Config();
-    private passport: Passport = new Passport(); // Initialize passport (LocalStrategy & JWTStrategy)
+    private passport = new Passport(); // Initialize passport (LocalStrategy & JWTStrategy)
 
-    public indexRoute: IndexRoute = new IndexRoute();
-    public authRoute: AuthRoute = new AuthRoute();
+    public indexRoute = new IndexRoute();
+    public authRoute = new AuthRoute();
 
     constructor() {
         this.app = express();
-        this.app.set('port', this.configuration.server.port || 3000);
+        this.app.set('port', config.server.port || 3000);
         this.config();
         this.routes();
     }
 
     private config(): void {
-        this.app.use(bodyParser.json()); // support application/json type post data
-        this.app.use(bodyParser.urlencoded({ extended: false })); // support application/x-www-form-urlencoded post data
+
+        this.app.use(express.json()); // support application/json type post data
+        this.app.use(express.urlencoded({ extended: false })); // support application/x-www-form-urlencoded post data
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(helmet());
+        this.app.use(this.passport.passport.initialize());
+
+        this.app.use('/api/v2', utils.checkApiToken);
+
+        if (config.server.rate_limit.enabled)
+            this.app.use('/api/v2', new RateLimiterMiddleware((error) => { if (error) console.log(error); }).middleware);
+
 
         this.app.use((req: express.Request, res: express.Response, next: any) => {
             res.setHeader('Access-Control-Allow-Origin', '*'); // Website you wish to allow to connect

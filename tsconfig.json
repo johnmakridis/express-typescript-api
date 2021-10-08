@@ -11,6 +11,9 @@
     "include": [
         "src/**/*.ts"
     ],
+    "files": [
+        "src/typings/custom-req.ts"
+    ],
     "exclude": [
         "node_modules"
     ]
