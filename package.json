@@ -3,7 +3,7 @@
     "version": "1.1.0",
     "description": "Node.js API with TypeScript & Express",
     "scripts": {
-        "start": "node ./dist/app.js",
+        "start": "node ./dist/server.js",
         "grunt": "grunt"
     },
     "author": {

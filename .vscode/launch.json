@@ -10,7 +10,7 @@
             ],
             "sourceMaps": true,
             "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
-            "program": "${workspaceFolder}/dist/app.js",
+            "program": "${workspaceFolder}/dist/server.js",
             "console": "integratedTerminal",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
